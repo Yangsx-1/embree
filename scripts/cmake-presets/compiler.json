@@ -59,6 +59,20 @@
       }
     },
     {
+      "name": "dpcpp-windows",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_C_COMPILER": "clang"
+      }
+    },
+    {
+      "name": "v143",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "toolset": "V143"
+    },
+    {
       "name": "v142",
       "generator": "Visual Studio 16 2019",
       "architecture": "x64",
@@ -136,7 +150,34 @@
       "toolset": "V110"
     },
 
-
+    {
+      "name": "ispc1.13.0",
+      "cacheVariables": {
+        "EMBREE_ISPC_SUPPORT": "ON",
+        "EMBREE_ISPC_EXECUTABLE": "$env{EMBREE_ISPC_1_13_0_PATH}"
+      }
+    },
+    {
+      "name": "ispc1.14.1",
+      "cacheVariables": {
+        "EMBREE_ISPC_SUPPORT": "ON",
+        "EMBREE_ISPC_EXECUTABLE": "$env{EMBREE_ISPC_1_14_1_PATH}"
+      }
+    },
+    {
+      "name": "ispc1.16.0",
+      "cacheVariables": {
+        "EMBREE_ISPC_SUPPORT": "ON",
+        "EMBREE_ISPC_EXECUTABLE": "$env{EMBREE_ISPC_1_16_0_PATH}"
+      }
+    },
+    {
+      "name": "ispc1.17.0",
+      "cacheVariables": {
+        "EMBREE_ISPC_SUPPORT": "ON",
+        "EMBREE_ISPC_EXECUTABLE": "$env{EMBREE_ISPC_1_17_0_PATH}"
+      }
+    },
     {
       "name": "ispc1_18_1",
       "cacheVariables": {
@@ -149,6 +190,20 @@
       "cacheVariables": {
         "EMBREE_ISPC_SUPPORT": "ON",
         "EMBREE_ISPC_EXECUTABLE": "$env{EMBREE_ISPC_1_19_0_PATH}"
+      }
+    },
+    {
+      "name": "ispc1_20_0",
+      "cacheVariables": {
+        "EMBREE_ISPC_SUPPORT": "ON",
+        "EMBREE_ISPC_EXECUTABLE": "$env{EMBREE_ISPC_1_20_0_PATH}"
+      }
+    },
+    {
+      "name": "ispc1_21_0",
+      "cacheVariables": {
+        "EMBREE_ISPC_SUPPORT": "ON",
+        "EMBREE_ISPC_EXECUTABLE": "$env{EMBREE_ISPC_1_21_0_PATH}"
       }
     }
   ]

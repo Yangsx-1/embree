@@ -49,8 +49,8 @@ IF (EMBREE_SYCL_SUPPORT AND EMBREE_INSTALL_DEPENDENCIES)
       INSTALL(FILES "${DPCPP_COMPILER_DIR}/../redist/intel64_win/compiler/libmmd.dll" DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT lib)
     ENDIF()
     
-    IF (EXISTS "${DPCPP_COMPILER_DIR}/../bin/win_proxy_loader.dll")
-      INSTALL(FILES "${DPCPP_COMPILER_DIR}/../bin/win_proxy_loader.dll" DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT lib)
+    IF (EXISTS "${DPCPP_COMPILER_DIR}/../bin/pi_win_proxy_loader.dll")
+      INSTALL(FILES "${DPCPP_COMPILER_DIR}/../bin/pi_win_proxy_loader.dll" DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT lib)
     ENDIF()
   ELSE()
     
@@ -58,7 +58,8 @@ IF (EMBREE_SYCL_SUPPORT AND EMBREE_INSTALL_DEPENDENCIES)
       "${DPCPP_COMPILER_DIR}/../lib/libsycl.so"
       "${DPCPP_COMPILER_DIR}/../lib/libsycl.so.?"
       "${DPCPP_COMPILER_DIR}/../lib/libsycl.so.?.?"
-      "${DPCPP_COMPILER_DIR}/../lib/libsycl.so.?.?.?")
+      "${DPCPP_COMPILER_DIR}/../lib/libsycl.so.?.?.?"
+      "${DPCPP_COMPILER_DIR}/../lib/libsycl.so.?.?.?-?")
     INSTALL(FILES ${LIB_SYCL_FILES} DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
     
     INSTALL(FILES "${DPCPP_COMPILER_DIR}/../lib/libpi_level_zero.so" DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)

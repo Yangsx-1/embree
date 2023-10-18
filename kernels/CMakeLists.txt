@@ -48,6 +48,7 @@ SET(EMBREE_LIBRARY_FILES
   common/geometry.cpp
   common/scene_user_geometry.cpp
   common/scene_instance.cpp
+  common/scene_instance_array.cpp
   common/scene_triangle_mesh.cpp
   common/scene_quad_mesh.cpp
   common/scene_curves.cpp
@@ -62,6 +63,7 @@ SET(EMBREE_LIBRARY_FILES
 
   geometry/primitive4.cpp
   geometry/instance_intersector.cpp
+  geometry/instance_array_intersector.cpp
   geometry/curve_intersector_virtual_4v.cpp
   geometry/curve_intersector_virtual_4i.cpp
   geometry/curve_intersector_virtual_4i_mb.cpp
@@ -114,6 +116,7 @@ MACRO(embree_files TARGET ISA)
       
   SET(${TARGET}
     geometry/instance_intersector.cpp
+    geometry/instance_array_intersector.cpp
     geometry/curve_intersector_virtual_4v.cpp
     geometry/curve_intersector_virtual_4i.cpp
     geometry/curve_intersector_virtual_4i_mb.cpp
@@ -131,6 +134,7 @@ MACRO(embree_files TARGET ISA)
     LIST(APPEND ${TARGET}
       common/scene_user_geometry.cpp
       common/scene_instance.cpp
+      common/scene_instance_array.cpp
       common/scene_triangle_mesh.cpp
       common/scene_quad_mesh.cpp 
       common/scene_curves.cpp
@@ -350,7 +354,7 @@ target_include_directories(embree PUBLIC
 # libtbb is located in same install folder as libembree
 IF(WIN32)
 ELSEIF(APPLE)
-  SET_TARGET_PROPERTIES(embree PROPERTIES INSTALL_RPATH "@rpath") # On MacOSX the app is supposed to already have an rpath set to that folder
+  SET_TARGET_PROPERTIES(embree PROPERTIES INSTALL_RPATH "@loader_path") # On MacOSX we tell dyld to find libtbb in the folder libembree is placed
 ELSE()
   SET_TARGET_PROPERTIES(embree PROPERTIES INSTALL_RPATH "$ORIGIN")  # Linux we tell ld to find libtbb in the folder libembree is placed.
 ENDIF()

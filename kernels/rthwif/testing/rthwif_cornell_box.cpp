@@ -10,8 +10,12 @@
 
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 void* dispatchGlobalsPtr = nullptr;
+
+static uint32_t global_width = 512;
+static uint32_t global_height = 512;
 
 void exception_handler(sycl::exception_list exceptions)
 {
@@ -423,7 +427,7 @@ void render(unsigned int x, unsigned int y, void* bvh, unsigned int* pixels, uns
   /* compute primary ray */
   intel_ray_desc_t ray;
   ray.origin = p;
-  ray.direction = float(x)*vx/8.0f + float(y)*vy/8.0f + vz;;
+  ray.direction = float(x)*vx*64.0f/float(width) + float(y)*vy*64/float(height) + vz;
   ray.tmin = 0.0f;
   ray.tmax = INFINITY;
   ray.mask = 0xFF;
@@ -454,9 +458,42 @@ void render(unsigned int x, unsigned int y, void* bvh, unsigned int* pixels, uns
 int main(int argc, char* argv[])
 {
   /* use can specify reference image to compare against */
+#if defined(EMBREE_SYCL_L0_RTAS_BUILDER)
+  ZeWrapper::RTAS_BUILD_MODE rtas_build_mode = ZeWrapper::RTAS_BUILD_MODE::AUTO;
+#else
+  ZeWrapper::RTAS_BUILD_MODE rtas_build_mode = ZeWrapper::RTAS_BUILD_MODE::INTERNAL;
+#endif
+  
   char* reference_img = NULL;
-  if (argc > 2 && std::string(argv[1]) == std::string("--compare"))
-    reference_img = argv[2];
+  for (int i=1; i<argc; i++)
+  {
+    if (strcmp(argv[i], "--compare") == 0) {
+      if (++i >= argc) throw std::runtime_error("--compare: filename expected");
+      reference_img = argv[i];
+    }
+    else if (strcmp(argv[i], "--internal-rtas-builder") == 0) {
+      rtas_build_mode = ZeWrapper::RTAS_BUILD_MODE::INTERNAL;
+    }
+    else if (strcmp(argv[i], "--level-zero-rtas-builder") == 0) {
+      rtas_build_mode = ZeWrapper::RTAS_BUILD_MODE::LEVEL_ZERO;
+    }
+    else if (strcmp(argv[i], "--default-rtas-builder") == 0) {
+      rtas_build_mode = ZeWrapper::RTAS_BUILD_MODE::AUTO;
+    }
+    else if (strcmp(argv[i], "--size") == 0) {
+      if (++i >= argc) throw std::runtime_error("--size: width expected");
+      global_width = atoi(argv[i]);
+      if (++i >= argc) throw std::runtime_error("--size: height expected");
+      global_height = atoi(argv[i]);
+      if (global_width == 0) throw std::runtime_error("--size: width is zero");
+      if (global_height == 0) throw std::runtime_error("--size: height is zero");
+      if (global_width > 4096) throw std::runtime_error("--size: width too large");
+      if (global_height > 4096) throw std::runtime_error("--size: height too large");
+    }
+    else {
+      throw std::runtime_error("unknown command line argument");
+    }
+  }
 
   /* create SYCL objects */
   sycl::device device = sycl::device(sycl::gpu_selector_v);
@@ -467,6 +504,43 @@ int main(int argc, char* argv[])
     std::cerr << "ZeWrapper not successfully initialized" << std::endl;
     return 1;
   }
+
+  sycl::platform platform = device.get_platform();
+  ze_driver_handle_t hDriver = sycl::get_native<sycl::backend::ext_oneapi_level_zero>(platform);
+
+  /* enable RTAS extension only when enabled */
+  if (rtas_build_mode == ZeWrapper::RTAS_BUILD_MODE::AUTO)
+  {
+    uint32_t count = 0;
+    std::vector<ze_driver_extension_properties_t> extensions;
+    ze_result_t result = ZeWrapper::zeDriverGetExtensionProperties(hDriver,&count,extensions.data());
+    if (result != ZE_RESULT_SUCCESS)
+      throw std::runtime_error("zeDriverGetExtensionProperties failed");
+    
+    extensions.resize(count);
+    result = ZeWrapper::zeDriverGetExtensionProperties(hDriver,&count,extensions.data());
+    if (result != ZE_RESULT_SUCCESS)
+      throw std::runtime_error("zeDriverGetExtensionProperties failed");
+    
+    bool ze_rtas_builder = false;
+    for (uint32_t i=0; i<extensions.size(); i++)
+    {
+      if (strncmp("ZE_experimental_rtas_builder",extensions[i].name,sizeof(extensions[i].name)) == 0)
+        ze_rtas_builder = true;
+    }
+
+    if (ze_rtas_builder)
+      ZeWrapper::initRTASBuilder(hDriver,ZeWrapper::RTAS_BUILD_MODE::AUTO);
+    else
+      ZeWrapper::initRTASBuilder(hDriver,ZeWrapper::RTAS_BUILD_MODE::INTERNAL);
+  }
+  else
+    ZeWrapper::initRTASBuilder(hDriver,rtas_build_mode);
+
+  if (ZeWrapper::rtas_builder == ZeWrapper::INTERNAL)
+    std::cout << "using internal RTAS builder" << std::endl;
+  else
+    std::cout << "using Level Zero RTAS builder" << std::endl;
 
 #if defined(ZE_RAYTRACING_RT_SIMULATION)
   RTCore::Init();
@@ -481,8 +555,8 @@ int main(int argc, char* argv[])
   void* bvh = build_rtas(device,context);
 
   /* creates framebuffer */
-  static const int width = 512;
-  static const int height = 512;
+  const uint32_t width = global_width;
+  const uint32_t height = global_height;
   unsigned int* pixels = (unsigned int*) sycl::aligned_alloc(64,width*height*sizeof(unsigned int),device,context,sycl::usm::alloc::shared);
   memset(pixels, 0, width*height*sizeof(uint32_t));
 

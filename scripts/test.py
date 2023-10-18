@@ -7,7 +7,6 @@
 import sys
 import subprocess
 import os
-import ctypes
 import pickle
 import re
 import shutil
@@ -43,12 +42,14 @@ def fix_cmake_paths():
 
 # detect platform
 if sys.platform.startswith("win"):
+  import ctypes
   SEM_FAILCRITICALERRORS = 0x0001
   SEM_NOGPFAULTERRORBOX  = 0x0002
   SEM_NOOPENFILEERRORBOX = 0x8000
   ctypes.windll.kernel32.SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
   OS = "windows"
 elif sys.platform.startswith("cygwin"):
+  import ctypes
   SEM_FAILCRITICALERRORS = 0x0001
   SEM_NOGPFAULTERRORBOX  = 0x0002
   SEM_NOOPENFILEERRORBOX = 0x8000
@@ -65,10 +66,6 @@ else:
 NAS = os.environ["STORAGE_PATH"] + "/packages/apps"
 if "klocwork:ON" in sys.argv:
   NAS = "/NAS/packages/apps"
-
-
-# path of oneapi installation on windows machines
-ONE_API_PATH_WINDOWS="C:\\Program Files (x86)\\Intel\\oneAPI\\compiler"
 
 # configures tests for specified host machine
 def runConfig(config):
@@ -118,7 +115,6 @@ def runConfig(config):
     conf.append("-D EMBREE_TESTING_ONLY_SYCL_TESTS=ON")
 
   #if "package" in config and OS == 'linux': # we need up to date cmake for RPMs to work properly
-  #  env.append("module load cmake")
   compiler = config["compiler"]
   platform = config["platform"]
   if OS == "windows":
@@ -178,11 +174,9 @@ def runConfig(config):
       conf.append("-T \"v141_clang_c2\"")
     elif (compiler.startswith("ICX")):
       cmake_build_suffix = ""
-      env.append('"'+ONE_API_PATH_WINDOWS+'\\'+compiler[3:]+'\\env\\vars.bat"')
       conf.append("-G Ninja -D CMAKE_CXX_COMPILER=icx -DCMAKE_C_COMPILER=icx")
     elif (compiler.startswith("dpcpp")):
       cmake_build_suffix=""
-      env.append("call " + os.environ["DPCPP_ROOT"] + "\\startup.bat")
       conf.append("-G Ninja -D CMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang")
     else:
       raise ValueError('unknown compiler: ' + compiler + '')
@@ -193,14 +187,12 @@ def runConfig(config):
     elif (compiler == "CLANG"):
       conf.append("-D CMAKE_CXX_COMPILER=clang++ -D CMAKE_C_COMPILER=clang")
     elif (compiler.startswith("ICX")):
-      env.append("source "+NAS+"/intel/oneAPI/compiler/"+compiler[3:]+"/env/vars.sh")
       conf.append("-G Ninja -DCMAKE_CXX_COMPILER=icpx -DCMAKE_C_COMPILER=icx")
     elif (compiler.startswith("ICC")):
       conf.append("-D CMAKE_CXX_COMPILER="+NAS+"/intel/"+compiler[3:]+"/bin/icpc -D CMAKE_C_COMPILER="+NAS+"/intel/"+compiler[3:]+"/bin/icc")
     elif (compiler.startswith("CLANG")):
       conf.append("-D CMAKE_CXX_COMPILER="+NAS+"/clang/v"+compiler[5:]+"/bin/clang++ -D CMAKE_C_COMPILER="+NAS+"/clang/v"+compiler[5:]+"/bin/clang")
     elif (compiler.startswith("dpcpp")):
-      env.append("source " + os.environ["DPCPP_ROOT"] + "/startup.sh")
       conf.append("-G Ninja -D CMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang")
     else:
       raise ValueError('unknown compiler: ' + compiler + '')
@@ -332,6 +324,8 @@ def runConfig(config):
     conf.append("-D EMBREE_GEOMETRY_USER="+config["USERGEOM"])
   if "INSTANCE" in config:
     conf.append("-D EMBREE_GEOMETRY_INSTANCE="+config["INSTANCE"])
+  if "INSTANCE_ARRAY" in config:
+    conf.append("-D EMBREE_GEOMETRY_INSTANCE_ARRAY="+config["INSTANCE_ARRAY"])
   if "POINT" in config:
     conf.append("-D EMBREE_GEOMETRY_POINT="+config["POINT"])
   if "GLFW" in config:
@@ -440,10 +434,6 @@ def runConfig(config):
 def run(mode):
 
   [ctest_env, ctest_suffix, cmake_build_suffix, threads] = pickle.load(open(".ctest_conf", "rb"))
-
-  # needed for sycl_test to find .so libraries in build folder
-  if mode != "build" and OS == "linux":
-    ctest_env += "export LD_LIBRARY_PATH="+os.getcwd()+"/build:$LD_LIBRARY_PATH && "
 
   # pick sde executable
   # don't use sde if no sde cpuid is specified

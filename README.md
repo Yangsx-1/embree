@@ -1,4 +1,4 @@
-% Embree: High Performance Ray Tracing Kernels 4.2.0
+% Embree: High Performance Ray Tracing Kernels 4.3.0
 % Intel Corporation
 
 Intel® Embree Overview
@@ -100,7 +100,7 @@ Windows Installation
 --------------------
 
 Embree linked against Visual Studio 2015 are provided as a ZIP file
-[embree-4.2.0.x64.vc14.windows.zip](https://github.com/embree/embree/releases/download/v4.2.0/embree-4.2.0.x64.vc14.windows.zip). After
+[embree-4.3.0.x64.vc14.windows.zip](https://github.com/embree/embree/releases/download/v4.3.0/embree-4.3.0.x64.vc14.windows.zip). After
 unpacking this ZIP file, you should set the path to the `lib` folder
 manually to your `PATH` environment variable for applications to find
 Embree.
@@ -110,13 +110,13 @@ Linux Installation
 ------------------
 
 The Linux version of Embree is also delivered as a `tar.gz` file:
-[embree-4.2.0.x86_64.linux.tar.gz](https://github.com/embree/embree/releases/download/v4.2.0/embree-4.2.0.x86_64.linux.tar.gz). Unpack
+[embree-4.3.0.x86_64.linux.tar.gz](https://github.com/embree/embree/releases/download/v4.3.0/embree-4.3.0.x86_64.linux.tar.gz). Unpack
 this file using `tar` and source the provided `embree-vars.sh` (if you
 are using the bash shell) or `embree-vars.csh` (if you are using the C
 shell) to set up the environment properly:
 
-    tar xzf embree-4.2.0.x86_64.linux.tar.gz
-    source embree-4.2.0.x86_64.linux/embree-vars.sh
+    tar xzf embree-4.3.0.x86_64.linux.tar.gz
+    source embree-4.3.0.x86_64.linux/embree-vars.sh
 
 We recommend adding a relative `RPATH` to your application that points
 to the location where Embree (and TBB) can be found, e.g. `$ORIGIN/../lib`.
@@ -126,12 +126,12 @@ macOS Installation
 ------------------
 
 The macOS version of Embree is also delivered as a ZIP file:
-[embree-4.2.0.x86_64.macosx.zip](https://github.com/embree/embree/releases/download/v4.2.0/embree-4.2.0.x86_64.macosx.zip). Unpack
+[embree-4.3.0.x86_64.macosx.zip](https://github.com/embree/embree/releases/download/v4.3.0/embree-4.3.0.x86_64.macosx.zip). Unpack
 this file using `tar` and source the provided `embree-vars.sh` (if you
 are using the bash shell) or `embree-vars.csh` (if you are using the C
 shell) to set up the environment properly:
 
-    unzip embree-4.2.0.x64.macosx.zip    source embree-4.2.0.x64.macosx/embree-vars.sh
+    unzip embree-4.3.0.x64.macosx.zip    source embree-4.3.0.x64.macosx/embree-vars.sh
 
 If you want to ship Embree with your application, please use the Embree
 library of the provided ZIP file. The library name of that Embree
@@ -156,7 +156,7 @@ set the `TBB_DIR` variable to the path containing `TBB-config.cmake` of a local
 TBB install, in case you do not have TBB installed globally on your system,
 e.g:
 
-    cmake -D embree_DIR=path_to_embree_package/lib/cmake/embree-4.2.0/ \
+    cmake -D embree_DIR=path_to_embree_package/lib/cmake/embree-4.3.0/ \
           -D TBB_DIR=path_to_tbb_package/lib/cmake/tbb/ \
           ..
 
@@ -257,7 +257,7 @@ Embree is released with a bundle of tests in an optional testing package.
 To run these tests extract the testing package in the same folder as your embree installation.
 e.g.:
     
-    tar -xzf embree-4.2.0-testing.zip -C /path/to/installed/embree
+    tar -xzf embree-4.3.0-testing.zip -C /path/to/installed/embree
 
 The tests are extracted into a new folder inside you embree installation and can be run with:
 
@@ -286,8 +286,7 @@ C++11. Embree is tested with the following compilers:
 Linux
 
   - Intel® oneAPI DPC++/C++ Compiler 2023.1.0
-  - Intel® oneAPI DPC++/C++ Compiler 2023.0.0
-  - oneAPI DPC++/C++ Compiler 2023-04-17
+  - oneAPI DPC++/C++ Compiler 2023-09-22
   - Clang 5.0.0
   - Clang 4.0.0
   - GCC 10.0.1 (Fedora 32) AVX512 support
@@ -295,24 +294,21 @@ Linux
   - GCC  7.3.1 (Fedora 27) AVX2 support
   - GCC  7.3.1 (Fedora 26) AVX2 support
   - GCC  6.4.1 (Fedora 25) AVX2 support
-  - Intel® Implicit SPMD Program Compiler 1.19.0
-  - Intel® Implicit SPMD Program Compiler 1.18.1
-  - Intel® Implicit SPMD Program Compiler 1.17.0
-  - Intel® Implicit SPMD Program Compiler 1.16.1
-  - Intel® Implicit SPMD Program Compiler 1.15.0
-  - Intel® Implicit SPMD Program Compiler 1.14.1
-  - Intel® Implicit SPMD Program Compiler 1.13.0
-  - Intel® Implicit SPMD Program Compiler 1.12.0
-  
+  - Intel® Implicit SPMD Program Compiler 1.21.0
+
 macOS x86
 
   - Intel® C++ Classic Compiler 2023.1.0
-  - Intel® C++ Classic Compiler 2023.0.0
   - Apple Clang 12.0.5 (macOS 11.7.1)
 
 macOS M1
 
   - Apple Clang 12.0.5 (macOS 11.7.1)
+
+IMPORTANT: Unfortunatlly, latest version of the Intel® oneAPI DPC++/C++
+Compiler (2023.2.1), has a bug that doesn't allow Embree to run correctly with
+ISAs >= AVX2. Please wait for 2024.0.0, which will be released soon after
+Embree 4.3.0.
 
 Embree supports using the Intel® Threading Building Blocks (TBB) as the
 tasking system. For performance and flexibility reasons we recommend
@@ -412,18 +408,21 @@ The "oneAPI DPC++ Compiler" is more up-to-date than the "Intel(R) oneAPI
 DPC++/C++ Compiler" but less stable. The current tested version of the "oneAPI
 DPC++ compiler is
 
-  - [oneAPI DPC++ Compiler 2023-04-17](https://github.com/intel/llvm/releases/download/sycl-nightly%2F20230417/dpcpp-compiler.tar.gz)
+  - [oneAPI DPC++ Compiler 2023-09-25](https://github.com/intel/llvm/releases/tag/nightly-2023-09-22)
   
 The compiler can be downloaded and simply extracted. The oneAPI DPC++ compiler
-2022-12-14 can be set up executing the following command in a Linux (bash)
-shell:
+can be set up executing the following commands in a Linux (bash) shell:
 
-    wget https://github.com/intel/llvm/releases/download/sycl-nightly%2F20230417/dpcpp-compiler.tar.gz
-    tar xzf dpcpp-compiler.tar.gz
-    source ./dpcpp_compiler/startup.sh
+    export SYCL_BUNDLE_ROOT=path_to_dpcpp_compiler
+    export PATH=$SYCL_BUNDLE_ROOT/bin:$PATH
+    export CPATH=$SYCL_BUNDLE_ROOT/include:$CPATH
+    export LIBRARY_PATH=$SYCL_BUNDLE_ROOT/lib:$LIBRARY_PATH
+    export LD_LIBRARY_PATH=$SYCL_BUNDLE_ROOT/lib:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=$SYCL_BUNDLE_ROOT/linux/lib/x64:$LD_LIBRARY_PATH
 
-The `startup.sh` script will put `clang++` and `clang` from the
-oneAPI DPC++ Compiler into your path.
+where the `path_to_dpcpp_compiler` should point to the unpacked oneAPI DPC++
+compiler. This will put `clang++` and `clang` from the oneAPI DPC++ Compiler
+into your path.
 
 Please also install all Linux packages described in the previous
 section.
@@ -442,7 +441,12 @@ through `EMBREE_SYCL_SUPPORT=ON`.
 
 Alternatively, you can download and run the installer of the
 
- - [Intel(R) oneAPI DPC++/C++ Compiler 2023.1.0](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp).
+ - [Intel(R) oneAPI DPC++/C++ Compiler](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp).
+
+IMPORTANT: Currently only the latest version of this compiler can be found
+(2023.2.1), which unfornunatelly has a bug that doesn't allow Embree to run
+correctly with ISAs >= AVX2. Please wait for 2024.0.0, which will be released
+soon after Embree 4.3.0.
 
 After installation, you can set up the compiler by sourcing the
 `vars.sh` script in the `env` directory of the compiler install directory, for example,
@@ -499,19 +503,16 @@ Windows
 Embree is tested using the following compilers under Windows:
 
   - Intel® oneAPI DPC++/C++ Compiler 2023.1.0
-  - Intel® oneAPI DPC++/C++ Compiler 2023.0.0
-  - oneAPI DPC++/C++ Compiler 2023-04-17
+  - oneAPI DPC++/C++ Compiler 2023-09-22
+  - Visual Studio 2022
   - Visual Studio 2019
   - Visual Studio 2017
-  - Intel® Implicit SPMD Program Compiler 1.19.0
-  - Intel® Implicit SPMD Program Compiler 1.18.1
-  - Intel® Implicit SPMD Program Compiler 1.17.0
-  - Intel® Implicit SPMD Program Compiler 1.16.1
-  - Intel® Implicit SPMD Program Compiler 1.15.0
-  - Intel® Implicit SPMD Program Compiler 1.14.1
-  - Intel® Implicit SPMD Program Compiler 1.13.0
-  - Intel® Implicit SPMD Program Compiler 1.12.0
-    
+  - Intel® Implicit SPMD Program Compiler 1.21.0
+
+IMPORTANT: Unfortunatlly, latest version of the Intel® oneAPI DPC++/C++
+Compiler (2023.2.1), has a bug that doesn't allow Embree to run correctly with
+ISAs >= AVX2. Please wait for 2024.0.0, which will be released soon after
+Embree 4.3.0.
 
 To compile Embree for AVX-512 you have to use the Intel® Compiler.
 
@@ -628,7 +629,7 @@ The "oneAPI DPC++ Compiler" is more up-to-date than the "Intel(R) oneAPI
 DPC++/C++ Compiler" but less stable. The current tested version of the oneAPI
 DPC++ compiler is
 
-  - [oneAPI DPC++ Compiler 2023-04-17](https://github.com/intel/llvm/releases/download/sycl-nightly%2F20230417/dpcpp-compiler-win.tar.gz)
+  - [oneAPI DPC++ Compiler 2023-09-22](https://github.com/intel/llvm/releases/tag/nightly-2023-09-22)
 
 Download and unpack the archive and open the "x64 Native Tools Command Prompt"
 of Visual Studio and execute the following lines to properly configure the
@@ -667,7 +668,12 @@ option.
 
 Alternatively, you can download and run the installer of the
 
- - [Intel(R) oneAPI DPC++/C++ Compiler 2023.0.0](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp).
+ - [Intel(R) oneAPI DPC++/C++ Compiler](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp).
+
+IMPORTANT: Currently only the latest version of this compiler can be found
+(2023.2.1), which unfornunatelly has a bug that doesn't allow Embree to run
+correctly with ISAs >= AVX2. Please wait for 2024.0.0, which will be released
+soon after Embree 4.3.0.
 
 After installation, you can either open a regular `Command Prompt` and execute
 the `vars.bat` script in the `env` directory of the compiler install directory,
@@ -716,7 +722,7 @@ your application with such an Embree package.
 In order to run the SYCL tutorials on HPG hardware, you first need to
 install the graphics drivers for your graphics card from
 [https://www.intel.com](https://www.intel.com). Please make sure to
-have installed version 31.0.101.4314 or newer.
+have installed version 31.0.101.4644 or newer.
 
 
 CMake Configuration
@@ -868,6 +874,9 @@ parameters that can be configured in CMake:
   geometries (ON by default).
 
 + `EMBREE_GEOMETRY_INSTANCE`: Enables support for instances (ON by
+  default).
+
++ `EMBREE_GEOMETRY_INSTANCE_ARRAY`: Enables support for instance arrays (ON by
   default).
 
 + `EMBREE_GEOMETRY_USER`: Enables support for user-defined geometries
@@ -1232,7 +1241,7 @@ triangles in this example.
 
 Inside the SYCL `parallel_for` loop you can use rendering related
 functions, such as the `rtcIntersect1` and `rtcOccluded1` functions to
-trace rays, `rtcForwardIntersect1` and `rtcForwardOccluded1` to
+trace rays, `rtcForwardIntersect1/Ex` and `rtcForwardOccluded1/Ex` to
 continue object traversal from inside a user geometry callback, and
 `rtcGetGeometryUserDataFromScene` to get the user data pointer of some
 geometry.
@@ -2946,7 +2955,8 @@ rtcNewGeometry
      RTC_GEOMETRY_TYPE_DISC_POINT,
      RTC_GEOMETRY_TYPE_ORIENTED_DISC_POINT,
      RTC_GEOMETRY_TYPE_USER,
-     RTC_GEOMETRY_TYPE_INSTANCE
+     RTC_GEOMETRY_TYPE_INSTANCE,
+     RTC_GEOMETRY_TYPE_INSTANCE_ARRAY,
     };
 
     RTCGeometry rtcNewGeometry(
@@ -2986,8 +2996,8 @@ bases (`RTC_GEOMETRY_TYPE_FLAT_LINEAR_CURVE`,
 (`RTC_GEOMETRY_TYPE_GRID`), point geometries
 (`RTC_GEOMETRY_TYPE_SPHERE_POINT`, `RTC_GEOMETRY_TYPE_DISC_POINT`,
 `RTC_TYPE_ORIENTED_DISC_POINT`), user-defined geometries
-(`RTC_GEOMETRY_TYPE_USER`), and instances
-(`RTC_GEOMETRY_TYPE_INSTANCE`).
+(`RTC_GEOMETRY_TYPE_USER`), instances (`RTC_GEOMETRY_TYPE_INSTANCE`),
+and instance arrays (`RTC_GEOMETRY_TYPE_INSTANCE_ARRAY`).
 
 The types `RTC_GEOMETRY_TYPE_ROUND_BEZIER_CURVE`,
 `RTC_GEOMETRY_TYPE_ROUND_BSPLINE_CURVE`, and
@@ -3045,7 +3055,8 @@ queried using `rtcGetDeviceError`.
 [RTC\_GEOMETRY\_TYPE\_TRIANGLE], [RTC\_GEOMETRY\_TYPE\_QUAD],
 [RTC\_GEOMETRY\_TYPE\_SUBDIVISION], [RTC\_GEOMETRY\_TYPE\_CURVE],
 [RTC\_GEOMETRY\_TYPE\_GRID], [RTC\_GEOMETRY\_TYPE\_POINT],
-[RTC\_GEOMETRY\_TYPE\_USER], [RTC\_GEOMETRY\_TYPE\_INSTANCE]
+[RTC\_GEOMETRY\_TYPE\_USER], [RTC\_GEOMETRY\_TYPE\_INSTANCE],
+[RTC\_GEOMETRY\_TYPE\_INSTANCE\_ARRAY]
 
 ```{=tex}
 
@@ -3929,6 +3940,98 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
+RTC\_GEOMETRY\_TYPE\_INSTANCE\_ARRAY
+------------------------------------
+
+#### NAME {#name}
+
+    RTC_GEOMETRY_TYPE_INSTANCE_ARRAY - instance array geometry type
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    RTCGeometry geometry =
+       rtcNewGeometry(device, RTC_GEOMETRY_TYPE_INSTANCE_ARRAY);
+
+#### DESCRIPTION {#description}
+
+Embree supports instance arrays, which is a more memory efficient way
+to represent large amounts of instances of the same or a small set of
+(sub)scenes. The main difference to regular Embree instances is that
+Embree instance arrays have a buffer of transformations (either affine
+transformations or quaternion decompositions
+[RTCQuaternionDecomposition]) that can be allocated by Embree or a
+shared buffer, similar to vertex buffers for triangle meshes.
+Optionally, instead of instancing only one scene, an instance array can
+instance multiple scenes by passing an array of scenes and a
+corresponding index buffer that specifies which instance of the
+instance array instances which of the scenes in the scenes array.
+
+Instance arrays are created by passing
+`RTC_GEOMETRY_TYPE_INSTANCE_ARRAY` to the `rtcNewGeometry` function
+call. The instanced scene can be either be set using the
+`rtcSetGeometryInstancedScene` call, or if multiple scenes should be
+instanced by passing an array of scenes using
+`rtcSetGeometryInstancedScenes`. The latter also requires to specify an
+index buffer using `rtcSetNewGeometryBuffer` or
+`rtcSetSharedGeometryBuffer` with `RTC_BUFFER_TYPE_INDEX` as the buffer
+type.
+
+Because the transformation information can become large for a large
+amount of instances, the instance array allows to share the
+transformation buffer between the user application and Embree. It can
+be either stored in a buffer created by Embree with
+`rtcSetNewGeometryBuffer` or an already existing buffer can be shared
+using `rtcSetSharedGeometryBuffer`. In either case, the buffer type has
+to be `RTC_BUFFER_TYPE_TRANSFORM` and the allowed formats are
+`RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR`, `RTC_FORMAT_FLOAT3X4_COLUMN_MAJOR`,
+`RTC_FORMAT_FLOAT3X4_ROW_MAJOR`, and
+`RTC_FORMAT_QUATERNION_DECOMPOSITION`. Embree will not modify the data
+in the transformation buffer.
+
+Embree instance arrays support both single-level instancing and
+multi-level instancing. The maximum instance nesting depth is
+`RTC_MAX_INSTANCE_LEVEL_COUNT`; it can be configured at compile-time
+using the constant `EMBREE_MAX_INSTANCE_LEVEL_COUNT`. Users should
+adapt this constant to their needs: instances nested any deeper are
+silently ignored in release mode, and cause assertions in debug mode.
+
+Please note that `rtcCommitScene` on the instanced scene(s) should be
+called first, followed by `rtcCommitGeometry` on the instance array,
+followed by `rtcCommitScene` for the top-level scene containing the
+instance array.
+
+If a ray hits the instance, the `geomID` and `primID` members of the
+hit are set to the geometry ID and primitive ID of the hit primitive in
+the instanced scene. The `instID` member of the hit is set to the
+geometry ID of the instance array in the top-level scene and the
+`instPrimID` member is set to the index of the hit instance of the
+instance array.
+
+For multi-segment motion blur, the number of time steps must be first
+specified using the `rtcSetGeometryTimeStepCount` function. Then a
+transformation for each time step can be specified using the
+`rtcSetNewGeometryBuffer` or `rtcSetSharedGeometryBuffer` function and
+passing the time step as the `slot` parameter of these calls.
+
+See the [Instance Array Geometry] tutorial for an example of how to
+use instance arrays.
+
+#### EXIT STATUS {#exit-status}
+
+On failure `NULL` is returned and an error code is set that can be
+queried using `rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcNewGeometry], [rtcSetGeometryInstancedScene],
+[rtcSetGeometryInstancedScenes], [rtcSetNewGeometryBuffer],
+[rtcSetSharedGeometryBuffer], [rtcGetGeometryTransformEx]
+
+```{=tex}
+
+```
 RTCCurveFlags
 -------------
 
@@ -4663,6 +4766,8 @@ RTCFormat
       RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR,
 
       RTC_FORMAT_GRID,
+
+      RTC_FORMAT_QUATERNION_DECOMPOSITION
     };
 
 #### DESCRIPTION {#description}
@@ -4688,9 +4793,12 @@ The `RTC_FORMAT_FLOAT3X4_ROW_MAJOR` and
 point matrix layed out either row major or column major. The
 `RTC_FORMAT_FLOAT4X4_ROW_MAJOR` and `RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR`
 formats, specify a 4x4 floating point matrix layed out either row major
-or column major. These matrix formats are used in the
-[rtcSetGeometryTransform] function in order to set a transformation
-matrix for geometries.
+or column major. The `RTC_FORMAT_QUATERNION_DECOMPOSITION` format
+specifies a structure that represents a quaternion decomposition (see
+[RTCQuaternionDecomposition]) of an affine transformation. These
+formats are used in the [rtcSetGeometryTransform] function or in
+geometry buffers with type `RTC_BUFFER_TYPE_TRANSFORM` in order to set
+a transformation matrix for instance and instance array geometries.
 
 The `RTC_FORMAT_GRID` is a special data format used to specify grid
 primitives of layout RTCGrid when creating grid geometries (see
@@ -4702,6 +4810,7 @@ primitives of layout RTCGrid when creating grid geometries (see
 
 [rtcSetGeometryBuffer], [rtcSetSharedGeometryBuffer],
 [rtcSetNewGeometryBuffer], [rtcSetGeometryTransform]
+[RTCQuaternionDecomposition]
 
 ```{=tex}
 
@@ -4735,6 +4844,8 @@ RTCBufferType
       RTC_BUFFER_TYPE_VERTEX_CREASE_INDEX  = 20,
       RTC_BUFFER_TYPE_VERTEX_CREASE_WEIGHT = 21,
       RTC_BUFFER_TYPE_HOLE                 = 22,
+      
+      RTC_BUFFER_TYPE_TRANSFORM            = 23,
 
       RTC_BUFFER_TYPE_FLAGS = 32
     };
@@ -4768,6 +4879,10 @@ The `RTC_BUFFER_TYPE_FACE`, `RTC_BUFFER_TYPE_LEVEL`,
 `RTC_BUFFER_TYPE_VERTEX_CREASE_WEIGHT`, and `RTC_BUFFER_TYPE_HOLE` are
 special buffers required to create subdivision meshes (see
 [RTC\_GEOMETRY\_TYPE\_SUBDIVISION]).
+
+The `RTC_BUFFER_TYPE_TRANSFORM` buffer is used to provide instance
+transformation information for instance array geometries (see
+[RTC\_GEOMETRY\_TYPE\_INSTANCE\_ARRAY]).
 
 The `RTC_BUFFER_TYPE_FLAGS` can get used to add additional flag per
 primitive of a geometry, and is currently only used for linear curves.
@@ -5814,6 +5929,48 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
+rtcSetGeometryInstancedScenes
+-----------------------------
+
+#### NAME {#name}
+
+    rtcSetGeometryInstancedScenes - sets an array of scenes that can be
+    instanced by an instance array geometry
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcSetGeometryInstancedScenes(
+      RTCGeometry geometry,
+      RTCScene* scene,
+      size_t numScenes
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcSetGeometryInstancedScenes` function sets an array of type
+`RTCScene` with `numScenes` elements that the specified instance
+geometry (`geometry` argument) can instance. This call also requires
+setting an index buffer using either `rtcSetSharedGeometryBuffer` or
+`rtcSetNewGeometryBuffer` (similar to index buffers for triangle
+meshes), that specifies which instance of the instance array instances
+which scene in the scene array. If only one scene should be instanced
+the call `rtcSetGeometryInstancedScene` should be preferred.
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[RTC\_GEOMETRY\_TYPE\_INSTANCE\_ARRAY], [rtcSetNewGeometryBuffer],
+[rtcSetSharedGeometryBuffer], [rtcSetGeometryInstancedScene]
+
+```{=tex}
+
+```
 rtcSetGeometryTransform
 -----------------------
 
@@ -5973,6 +6130,61 @@ On failure an error code is set that can be queried using
 
 [RTC\_GEOMETRY\_TYPE\_INSTANCE], [rtcSetGeometryTransform],
 [rtcGetGeometryTransformFromScene]
+
+```{=tex}
+
+```
+rtcGetGeometryTransformEx
+-------------------------
+
+#### NAME {#name}
+
+    rtcGetGeometryTransformEx - returns the interpolated instance
+    transformation for an instance of an instance array geometry for the
+    specified time.
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcGetGeometryTransformEx(
+      RTCGeometry geometry,
+      unsigned int instPrimID,
+      float time,
+      enum RTCFormat format,
+      void* xfm
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcGetGeometryTransformEx` function returns the interpolated local
+to world transformation (`xfm` parameter) of the `instPrimID`-th
+instance of an instance array geometry (`geometry` parameter) for a
+particular time (`time` parameter in range $[0,1]$) in the specified
+format (`format` parameter). The function can also be used when
+`geometry` refers to a regular instance, but then the `instPrimID` has
+to be $0$.
+
+Possible formats for the returned matrix are:
+
+-   `RTC_FORMAT_FLOAT3X4_ROW_MAJOR`: The 3×4 float matrix is laid out
+    in row-major form.
+
+-   `RTC_FORMAT_FLOAT3X4_COLUMN_MAJOR`: The 3×4 float matrix is laid
+    out in column-major form.
+
+-   `RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR`: The 3×4 float matrix is laid
+    out in column-major form as a 4×4 homogeneous matrix with last row
+    equal to (0, 0, 0, 1).
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[RTC\_GEOMETRY\_TYPE\_INSTANCE\_ARRAY]
 
 ```{=tex}
 
@@ -7978,7 +8190,7 @@ rtcForwardIntersect1
 
 #### NAME {#name}
 
-    rtcForwardIntersect1 - forwards a single ray to new scene
+    rtcForwardIntersect1/Ex - forwards a single ray to new scene
       from user geometry callback
 
 #### SYNOPSIS {#synopsis}
@@ -7992,16 +8204,25 @@ rtcForwardIntersect1
       unsigned int instID
     );
 
+    void rtcForwardIntersect1Ex(
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay* ray,
+      unsigned int instID,
+      unsigned int instPrimID,
+    );
+
 #### DESCRIPTION {#description}
 
-The `rtcForwardIntersect1` function forwards the traversal of a
-transformed ray (`ray` argument) into a scene (`scene` argument) from a
-user geometry callback. The function can only get invoked from a user
-geometry callback for a ray traversal initiated with the
-`rtcIntersect1` function. The callback arguments structure of the
-callback invokation has to get passed to the ray forwarding (`args`
-argument). The user geometry callback should instantly terminate after
-invoking the `rtcForwardIntersect1` function.
+The `rtcForwardIntersect1` and `rtcForwardIntersect1Ex` functions
+forward the traversal of a transformed ray (`ray` argument) into a
+scene (`scene` argument) from a user geometry callback. The function
+can only get invoked from a user geometry callback for a ray traversal
+initiated with the `rtcIntersect1` function. The callback arguments
+structure of the callback invokation has to get passed to the ray
+forwarding (`args` argument). The user geometry callback should
+instantly terminate after invoking the `rtcForwardIntersect1/Ex`
+function.
 
 Only the ray origin and ray direction members of the ray argument are
 used for forwarding, all additional ray properties are inherited from
@@ -8017,10 +8238,15 @@ This function can get used to implement user defined instancing using
 user geometries, e.g. by transforming the ray in a special way, and/or
 selecting between different scenes to instantiate.
 
+For user defined instance arrays, the `rtcForwardIntersect1Ex` variant
+has an additional `instPrimID` argument which is pushed to the instance
+primitive ID stack. Instance primitive IDs identify which instance of
+an instance array was hit.
+
 When using Embree on the CPU it is possible to recursively invoke
 `rtcIntersect1` directly from a user geometry callback. However, when
 SYCL is used, recursively tracing rays is not directly supported, and
-the `rtcForwardIntersect1` function must be used.
+the `rtcForwardIntersect1/Ex` functions must be used.
 
 The ray structure must be aligned to 16 bytes.
 
@@ -8041,7 +8267,7 @@ rtcForwardOccluded1
 
 #### NAME {#name}
 
-    rtcForwardOccluded1 - forwards a single ray to new scene
+    rtcForwardOccluded1/Ex - forwards a single ray to new scene
       from user geometry callback
 
 #### SYNOPSIS {#synopsis}
@@ -8055,16 +8281,24 @@ rtcForwardOccluded1
       unsigned int instID
     );
 
+    void rtcForwardOccluded1(
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
 #### DESCRIPTION {#description}
 
-The `rtcForwardOccluded1` function forwards the traversal of a
-transformed ray (`ray` argument) into a scene (`scene` argument) from a
-user geometry callback. The function can only get invoked from a user
-geometry callback for a ray traversal initiated with the `rtcOccluded1`
-function. The callback arguments structure of the callback invokation
-has to get passed to the ray forwarding (`args` argument). The user
-geometry callback should instantly terminate after invoking the
-`rtcForwardOccluded1` function.
+The `rtcForwardOccluded1` and `rtcForwardOccluded1Ex` functions forward
+the traversal of a transformed ray (`ray` argument) into a scene
+(`scene` argument) from a user geometry callback. The function can only
+get invoked from a user geometry callback for a ray traversal initiated
+with the `rtcOccluded1` function. The callback arguments structure of
+the callback invokation has to get passed to the ray forwarding (`args`
+argument). The user geometry callback should instantly terminate after
+invoking the `rtcForwardOccluded1/Ex` function.
 
 Only the ray origin and ray direction members of the ray argument are
 used for forwarding, all additional ray properties are inherited from
@@ -8080,10 +8314,15 @@ This function can get used to implement user defined instancing using
 user geometries, e.g. by transforming the ray in a special way, and/or
 selecting between different scenes to instantiate.
 
+For user defined instance arrays, the `rtcForwardIntersect1Ex` variant
+has an additional `instPrimID` argument which is pushed to the instance
+primitive ID stack. Instance primitive IDs identify which instance of
+an instance array was hit.
+
 When using Embree on the CPU it is possible to recursively invoke
 `rtcOccluded1` directly from a user geometry callback. However, when
 SYCL is used, recursively tracing rays is not directly supported, and
-the `rtcForwardOccluded1` function must be used.
+the `rtcForwardOccluded1/Ex` function must be used.
 
 The ray structure must be aligned to 16 bytes.
 
@@ -8104,7 +8343,7 @@ rtcForwardIntersect4/8/16
 
 #### NAME {#name}
 
-    rtcForwardIntersect4/8/16 - forwards a ray packet to new scene
+    rtcForwardIntersect4/8/16/Ex - forwards a ray packet to new scene
       from user geometry callback
 
 #### SYNOPSIS {#synopsis}
@@ -8119,11 +8358,11 @@ rtcForwardIntersect4/8/16
       unsigned int instID
     );
 
-    void rtcForwardIntersect4(
+    void rtcForwardIntersect8(
       void int* valid,
       const struct RTCIntersectFunctionNArguments* args,
       RTCScene scene,
-      struct RTCRay4* ray,
+      struct RTCRay8* ray,
       unsigned int instID
     );
 
@@ -8132,19 +8371,48 @@ rtcForwardIntersect4/8/16
       const struct RTCIntersectFunctionNArguments* args,
       RTCScene scene,
       struct RTCRay16* ray,
-      unsigned int instID
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcForwardIntersect4Ex(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay4* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcForwardIntersect8Ex(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay8* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcForwardIntersect16Ex(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay16* ray,
+      unsigned int instID,
+      unsigned int instPrimID
     );
 
 #### DESCRIPTION {#description}
 
-The `rtcForwardIntersect4/8/16` functions forward the traversal of a
-transformed ray packet (`ray` argument) into a scene (`scene` argument)
-from a user geometry callback. The function can only get invoked from a
-user geometry callback for a ray traversal initiated with the
-`rtcIntersect4/8/16` function. The callback arguments structure of the
-callback invokation has to get passed to the ray forwarding (`args`
-argument). The user geometry callback should instantly terminate after
-invoking the `rtcForwardIntersect4/8/16` function.
+The `rtcForwardIntersect4/8/16` and `rtcForwardIntersect4/8/16Ex`
+functions forward the traversal of a transformed ray packet (`ray`
+argument) into a scene (`scene` argument) from a user geometry
+callback. The function can only get invoked from a user geometry
+callback for a ray traversal initiated with the `rtcIntersect4/8/16`
+function. The callback arguments structure of the callback invokation
+has to get passed to the ray forwarding (`args` argument). The user
+geometry callback should instantly terminate after invoking the
+`rtcForwardIntersect4/8/16/Ex` function.
 
 Only the ray origin and ray direction members of the ray argument are
 used for forwarding, all additional ray properties are inherited from
@@ -8159,6 +8427,11 @@ the original `rtcIntersect4/8/16` invokation.
 This function can get used to implement user defined instancing using
 user geometries, e.g. by transforming the ray in a special way, and/or
 selecting between different scenes to instantiate.
+
+For user defined instance arrays, the `rtcForwardIntersect4/8/16Ex`
+variant has an additional `instPrimID` argument which is pushed to the
+instance primitive ID stack. Instance primitive IDs identify which
+instance of an instance array was hit.
 
 When using Embree on the CPU it is possible to recursively invoke
 `rtcIntersect4/8/16` directly from a user geometry callback. However,
@@ -8186,7 +8459,7 @@ rtcForwardOccluded4/8/16
 
 #### NAME {#name}
 
-    rtcForwardOccluded4/8/16 - forwards a ray packet to new scene
+    rtcForwardOccluded4/8/16/Ex - forwards a ray packet to new scene
       from user geometry callback
 
 #### SYNOPSIS {#synopsis}
@@ -8201,11 +8474,11 @@ rtcForwardOccluded4/8/16
       unsigned int instID
     );
 
-    void rtcForwardOccluded4(
+    void rtcForwardOccluded8(
       void int* valid,
       const struct RTCOccludedFunctionNArguments* args,
       RTCScene scene,
-      struct RTCRay4* ray,
+      struct RTCRay8* ray,
       unsigned int instID
     );
 
@@ -8217,16 +8490,44 @@ rtcForwardOccluded4/8/16
       unsigned int instID
     );
 
+    void rtcForwardOccluded4Ex(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay4* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcForwardOccluded8Ex(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay8* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcForwardOccluded16Ex(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay16* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
 #### DESCRIPTION {#description}
 
-The `rtcForwardOccluded4/8/16` functions forward the traversal of a
-transformed ray packet (`ray` argument) into a scene (`scene` argument)
-from a user geometry callback. The function can only get invoked from a
-user geometry callback for a ray traversal initiated with the
-`rtcOccluded4/8/16` function. The callback arguments structure of the
-callback invokation has to get passed to the ray forwarding (`args`
-argument). The user geometry callback should instantly terminate after
-invoking the `rtcForwardOccluded4/8/16` function.
+The `rtcForwardOccluded4/8/16` and `rtcForwardOccluded4/8/16Ex`
+functions forward the traversal of a transformed ray packet (`ray`
+argument) into a scene (`scene` argument) from a user geometry
+callback. The function can only get invoked from a user geometry
+callback for a ray traversal initiated with the `rtcOccluded4/8/16`
+function. The callback arguments structure of the callback invokation
+has to get passed to the ray forwarding (`args` argument). The user
+geometry callback should instantly terminate after invoking the
+`rtcForwardOccluded4/8/16/Ex` function.
 
 Only the ray origin and ray direction members of the ray argument are
 used for forwarding, all additional ray properties are inherited from
@@ -8241,6 +8542,11 @@ original `rtcOccluded4/8/16` invokation.
 This function can get used to implement user defined instancing using
 user geometries, e.g. by transforming the ray in a special way, and/or
 selecting between different scenes to instantiate.
+
+For user defined instance arrays, the `rtcForwardIntersect4/8/16Ex`
+variant has an additional `instPrimID` argument which is pushed to the
+instance primitive ID stack. Instance primitive IDs identify which
+instance of an instance array was hit.
 
 When using Embree on the CPU it is possible to recursively invoke
 `rtcOccluded4/8/16` directly from a user geometry callback. However,
@@ -9354,6 +9660,25 @@ ways can be distinguished.
 
 [Source Code](https://github.com/embree/embree/blob/master/tutorials/instanced_geometry/instanced_geometry_device.cpp)
 
+Instance Array Geometry
+----------------------
+
+[![][imgForest]](https://github.com/embree/embree/blob/master/tutorials/forest/forest_device.cpp)
+
+This tutorial demonstrates the usage of instance arrays in Embree. Instance arrays
+are large collections of similar objects. Examples are sand dunes that consist
+of millions of instances of a few grain models or, like here, a forest consisting of
+many instances of a few tree models.
+
+In this application can switch between representing the scene with regular
+instances or (one!) instance array. It also prints several stats, that
+demonstrate the memory savings and faster BVH build times when using instance
+arrays for such scenes. Instance arrays come with a small overhead on CPU and
+should be preferred if memory consumption is more important than raytracing
+performance.
+
+[Source Code](https://github.com/embree/embree/blob/master/tutorials/forest/forest_device.cpp)
+
 Multi Level Instancing
 ----------------------
 
@@ -9595,6 +9920,7 @@ collecting the next N hits in a single ray query.
 [Stream Viewer]: #stream-viewer
 [User Geometry]: #user-geometry
 [Instanced Geometry]: #instanced-geometry
+[Instance Array Geometry]: #instance-array-geometry
 [Multi Level Instancing]: #multi-level-instancing
 [Intersection Filter]: #intersection-filter
 [Hair]: #hair
@@ -9614,6 +9940,7 @@ collecting the next N hits in a single ray query.
 [imgUserGeometry]: https://embree.github.io/images/user_geometry.jpg
 [imgViewer]: https://embree.github.io/images/viewer.jpg
 [imgInstancedGeometry]: https://embree.github.io/images/instanced_geometry.jpg
+[imgForest]: https://embree.github.io/images/forest.jpg
 [imgMultiLevelInstancing]: https://embree.github.io/images/multi_level_instancing.jpg
 [imgIntersectionFilter]: https://embree.github.io/images/intersection_filter.jpg
 [imgPathtracer]: https://embree.github.io/images/pathtracer.jpg

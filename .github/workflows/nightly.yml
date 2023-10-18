@@ -21,7 +21,7 @@ jobs:
   ########################################
   continuous-linux-DG2-JIT-multilevel:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@devel
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@main
     with:
       image: embree/ubuntu:22.04
       runs-on: '[ "Linux", "docker", "build" ]'
@@ -36,7 +36,7 @@ jobs:
 
   continuous-linux-DG2-JIT-multilevel-test:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@devel
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@main
     needs: ["continuous-linux-DG2-JIT-multilevel"]
     with:
       image: embree/ubuntu:22.04
@@ -51,7 +51,7 @@ jobs:
 
   continuous-linux-PVC-JIT:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@devel
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@main
     with:
       image: embree/ubuntu:22.04
       runs-on: '[ "Linux", "docker", "build" ]'
@@ -66,7 +66,7 @@ jobs:
 
   continuous-linux-PVC-JIT-test:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@devel
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@main
     needs: ["continuous-linux-PVC-JIT"]
     with:
       image: embree/ubuntu:22.04
@@ -85,7 +85,7 @@ jobs:
 
   continuous-windows-DG2-JIT:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows_gpu.yml@devel
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows_gpu.yml@main
     with:
       runs-on: '[ "Windows", "NAS", "dg2" ]'
       project: embree
@@ -107,19 +107,19 @@ jobs:
 
   # CLANG compilation and testing of different ISAs
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_12_0-SSE2-TBB-NAMESPACE:
+  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_13_0-SSE2-TBB-NAMESPACE:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.12.0 isa:SSE2 tasking:TBB2019.9 intensity:4 api_namespace:myembree maxinstancelevelcount:8
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.13.0 isa:SSE2 tasking:TBB2019.9 intensity:4 api_namespace:myembree maxinstancelevelcount:8
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-x64-Debug-CLANG5_0_0-ISPC1_15_0-AVX2-INT-ADDRSANITIZER:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:26
       cmd: |
@@ -129,7 +129,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_16_1-AVX2-TBB2021_2_0-STATIC:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -139,7 +139,7 @@ jobs:
 
   nightly-linux-avx512vl-x64-Debug-CLANG4_0_0-ISPC1_16_1-AVX512-TBB2020_2:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:26
       runs-on: '[ "Linux", "docker", "avx512" ]'
@@ -152,7 +152,7 @@ jobs:
 
   nightly-linux-x64-Debug-GCC-ISPC1_16_1-SSE2-TBB2021_2_0:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -162,7 +162,7 @@ jobs:
 
   nightly-linux-x64-Debug-GCC-ISPC1_16_1-AVX-TBB2019_9:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -172,7 +172,7 @@ jobs:
 
   nightly-linux-x64-Debug-GCC-ISPC1_17_0-AVX2-TBB2021_2_0:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -184,64 +184,70 @@ jobs:
 
   nightly-linux-x64-Debug-ICX2023_0_0-ISPC1_16_1-AVX-TBB2019_2:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@main
     with:
       image: embree/rockylinux:8.7
+      dpcpp-version: intel/2023.0
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.16.1 isa:AVX tasking:TBB2019.2 intensity:4
+        scripts/test.py configure platform:x64 build:Debug compiler:ICX ispc:ispc1.16.1 isa:AVX tasking:TBB2019.2 intensity:4
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-avx512vl-x64-Debug-ICX2023_0_0-ISPC1_16_1-AVX512-TBB2019_2:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@main
     with:
       image: embree/rockylinux:8.7
       runs-on: '[ "Linux", "docker", "avx512" ]'
+      dpcpp-version: intel/2023.0
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.16.1 isa:AVX512 frequency_level:simd256 tasking:TBB2019.2 intensity:4
+        scripts/test.py configure platform:x64 build:Debug compiler:ICX ispc:ispc1.16.1 isa:AVX512 frequency_level:simd256 tasking:TBB2019.2 intensity:4
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-avx512vl-x64-Debug-ICX2023_0_0-ISPC1_16_1-AVX512-TBB2019_9:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@main
     with:
       image: embree/fedora:29
       runs-on: '[ "Linux", "docker", "avx512" ]'
+      dpcpp-version: intel/2023.0
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.16.1 isa:AVX512 tasking:TBB2019.9 intensity:4
+        scripts/test.py configure platform:x64 build:Debug compiler:ICX ispc:ispc1.16.1 isa:AVX512 tasking:TBB2019.9 intensity:4
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-x64-Debug-ICX2023_0_0-ISPC1_16_1-AVX2-TBB2021_2_0:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@main
     with:
       image: embree/fedora:29
+      dpcpp-version: intel/2023.0
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.16.1 isa:AVX2 tasking:TBB2021.2.0 intensity:4
+        scripts/test.py configure platform:x64 build:Debug compiler:ICX ispc:ispc1.16.1 isa:AVX2 tasking:TBB2021.2.0 intensity:4
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-x64-Debug-ICX2023_0_0-ISPC1_17_0-AVX2-TBB2019_9:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@main
     with:
       image: embree/rockylinux:8.7
+      dpcpp-version: intel/2023.0
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 intensity:4
+        scripts/test.py configure platform:x64 build:Debug compiler:ICX ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 intensity:4
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-avx512vl-x64-Debug-ICX2023_0_0-ISPC1_17_0-AVX512-TBB2021_5_0:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@main
     with:
       image: embree/ubuntu:22.04
       runs-on: '[ "Linux", "docker", "avx512" ]'
+      dpcpp-version: intel/2023.0
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug threads:4 compiler:ICX2023.0.0 ispc:ispc1.17.0 isa:AVX512 frequency_level:simd256 tasking:TBB2021.5.0 intensity:2
+        scripts/test.py configure platform:x64 build:Debug threads:4 compiler:ICX ispc:ispc1.17.0 isa:AVX512 frequency_level:simd256 tasking:TBB2021.5.0 intensity:2
         scripts/test.py build
         scripts/test.py test
 
@@ -249,7 +255,7 @@ jobs:
 
   nightly-ubuntu20_04-x64-Debug-GCC-ISPC1_17_0-AVX2-TBB:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/ubuntu:20.04
       cmd: |
@@ -259,7 +265,7 @@ jobs:
 
   nightly-ubuntu20_04-x64-Release-GCC-ISPC1_14_1-AVX2-TBB2021_2_0:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/ubuntu:20.04
       cmd: |
@@ -269,7 +275,7 @@ jobs:
 
   nightly-ubuntu16_04-x64-Debug-GCC-ISPC1_17_0-AVX2-TBB:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/ubuntu:16.04
       cmd: |
@@ -279,7 +285,7 @@ jobs:
 
   nightly-centos7_4-x64-Debug-GCC-ISPC1_17_0-AVX2-TBB:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/centos:7.4
       cmd: |
@@ -289,7 +295,7 @@ jobs:
 
   #nightly-centos7_0-x64-Debug-GCC-ISPC1_17_0-AVX2-TBB:
   #  secrets: inherit
-  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
   #  with:
   #    image: embree/centos:7.0
   #    cmd: |
@@ -299,7 +305,7 @@ jobs:
 
   nightly-fedora32-x64-Debug-GCC-ISPC-AVX512-TBB:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:32
       runs-on: '[ "Linux", "docker", "avx512" ]'
@@ -310,42 +316,42 @@ jobs:
 
   nightly-fedora28-x64-Debug-GCC-ISPC-AVX512-TBB:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:28
       runs-on: '[ "Linux", "docker", "avx512" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc isas:SSE2-SSE42-AVX-AVX2-AVX512 tasking:TBB intensity:3
+        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.14.1 isas:SSE2-SSE42-AVX-AVX2-AVX512 tasking:TBB intensity:3
         scripts/test.py build
         scripts/test.py test
 
   nightly-fedora27-x64-Debug-GCC-ISPC-AVX2-TBB:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:27
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc isa:AVX2 tasking:TBB intensity:3
+        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.14.1 isa:AVX2 tasking:TBB intensity:3
         scripts/test.py build
         scripts/test.py test
 
   nightly-fedora26-x64-Debug-GCC-ISPC-AVX2-TBB:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:26
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc isa:AVX2 tasking:TBB intensity:3
+        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.14.1 isa:AVX2 tasking:TBB intensity:3
         scripts/test.py build
         scripts/test.py test
 
   nightly-fedora25-x64-Debug-GCC-ISPC-AVX2-TBB:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc isa:AVX2 tasking:TBB intensity:3
+        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.14.1 isa:AVX2 tasking:TBB intensity:3
         scripts/test.py build
         scripts/test.py test
 
@@ -353,7 +359,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-AVX2-TBB2019_9-NO-ISPC:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -363,7 +369,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-NO-TUTORIALS:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -373,7 +379,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-BACKFACECULLING:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -383,7 +389,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-IGNORE-INVALID-RAYS:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -393,7 +399,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-NO-FILTER-FUNCTION:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -403,7 +409,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-RAYMASKS:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -413,7 +419,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-NO-PACKETS:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -423,7 +429,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-STATCOUNTER:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -435,7 +441,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-ISAS-SSE2-TBB2019_9:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -445,7 +451,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-ISAS-SSE42-TBB2021_2_0:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -455,7 +461,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-ISAS-AVX-TBB2019_9:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -465,7 +471,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-ISAS-AVX2-TBB2021_2_0:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -475,7 +481,7 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-ISAS-AVX512-TBB2019_9:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
@@ -487,121 +493,143 @@ jobs:
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-TRI:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF intensity:0
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF INSTANCE_ARRAY:OFF intensity:0
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-QUAD:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 TRI:OFF QUAD:ON GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF intensity:0
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 TRI:OFF QUAD:ON GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF INSTANCE_ARRAY:OFF intensity:0
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-GRID:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:OFF QUAD:OFF GRID:ON CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF intensity:0
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:OFF QUAD:OFF GRID:ON CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF INSTANCE_ARRAY:OFF intensity:0
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-CURVE:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 TRI:ON QUAD:OFF GRID:OFF CURVE:ON SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF intensity:0
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 TRI:ON QUAD:OFF GRID:OFF CURVE:ON SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF INSTANCE_ARRAY:OFF intensity:0
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-SUBDIV:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:ON USERGEOM:OFF INSTANCE:OFF intensity:0
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:ON USERGEOM:OFF INSTANCE:OFF INSTANCE_ARRAY:OFF intensity:0
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-USERGEOM:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:ON INSTANCE:OFF intensity:0
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:ON INSTANCE:OFF INSTANCE_ARRAY:OFF intensity:0
         scripts/test.py build
         scripts/test.py test
 
   nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-INSTANCE:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:25
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:ON intensity:0
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:ON INSTANCE_ARRAY:OFF intensity:0
         scripts/test.py build
         scripts/test.py test
 
+  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-INSTANCE_ARRAY:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:25
+      cmd: |
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF INSTANCE_ARRAY:ON intensity:0
+        scripts/test.py build
+        scripts/test.py test
+
+  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-INSTANCE-INSTANCE_ARRAY:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:25
+      cmd: |
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:ON INSTANCE_ARRAY:ON intensity:0
+        scripts/test.py build
+        scripts/test.py test
 
   ########################################
   # Windows
   ########################################
-  nightly-windows-x64-RelWithDebInfo-V142-ISPC1_13_0-AVX2-TBB2020_2-STATIC:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
-    with:
-      cmd: |
-        python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:V142 ispc:ispc1.13.0 isa:AVX2 tasking:TBB2020.2 intensity:2
-        python scripts/test.py build
-        python scripts/test.py test
+  #nightly-windows-x64-RelWithDebInfo-V142-ISPC1_13_0-AVX2-TBB2020_2-STATIC:
+  #  secrets: inherit
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+  #  with:
+  #    cmd: |
+  #      python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:V142 ispc:ispc1.13.0 isa:AVX2 tasking:TBB2020.2 intensity:2
+  #      python scripts/test.py build
+  #      python scripts/test.py test
 
-  nightly-windows-x64-RelWithDebInfo-LLVM-CLANG-ISPC1_13_0-AVX2-TBB2019_9-NAMESPACE:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
-    with:
-      cmd: |
-        python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:LLVM_CLANG ispc:ispc1.13.0 isa:AVX2 tasking:TBB2019.9 intensity:4 api_namespace:myembree
-        python scripts/test.py build
-        python scripts/test.py test
+  #nightly-windows-x64-RelWithDebInfo-LLVM-CLANG-ISPC1_13_0-AVX2-TBB2019_9-NAMESPACE:
+  #  secrets: inherit
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+  #  with:
+  #    cmd: |
+  #      python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:LLVM_CLANG ispc:ispc1.13.0 isa:AVX2 tasking:TBB2019.9 intensity:4 api_namespace:myembree
+  #      python scripts/test.py build
+  #      python scripts/test.py test
 
   nightly-windows-x64-RelWithDebInfo-ICX2023_0_0-ISPC1_13_0-AVX2-TBB2021_5_0:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows_gpu.yml@main
     with:
+      dpcpp-version: oneAPI/compiler/2023.0.0
       cmd: |
-        python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:ICX2023.0.0 ispc:ispc1.13.0 isa:AVX2 frequency_level:simd128 tasking:TBB2021.5.0 intensity:4
+        python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:ICX ispc:ispc1.13.0 isa:AVX2 frequency_level:simd128 tasking:TBB2021.5.0 intensity:4
         python scripts/test.py build
         python scripts/test.py test
 
   nightly-windows-x64-RelWithDebInfo-ICX2023_0_0-ISPC1_13_0-AVX512-TBB2019_9:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows_gpu.yml@main
     with:
       runs-on: '[ "Windows", "NAS", "build", "avx512" ]'
+      dpcpp-version: oneAPI/compiler/2023.0.0
       cmd: |
-        python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:ICX2023.0.0 ispc:ispc1.13.0 isa:AVX512 tasking:TBB2019.9 intensity:2
+        python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:ICX ispc:ispc1.13.0 isa:AVX512 tasking:TBB2019.9 intensity:2
         python scripts/test.py build
         python scripts/test.py test
 
   nightly-windows-x64-RelWithDebInfo-ICX2023_0_0-ISPC1_14_1-AVX2-TBB2021_2_0:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows_gpu.yml@main
     with:
+      dpcpp-version: oneAPI/compiler/2023.0.0
       cmd: |
-        python scripts/test.py configure platform:x64 build:Release compiler:ICX2023.0.0 ispc:ispc1.14.1 isa:AVX2 tasking:TBB2021.2.0 intensity:2
+        python scripts/test.py configure platform:x64 build:Release compiler:ICX ispc:ispc1.14.1 isa:AVX2 tasking:TBB2021.2.0 intensity:2
         python scripts/test.py build
         python scripts/test.py test
 
@@ -632,13 +660,13 @@ jobs:
 
   # CLANG compilation and testing of different ISAs
 
-  nightly-macosx-x64-Debug-CLANG-ISPC1_12_0-SSE2-TBB2021_1_1-NAMESPACE:
+  nightly-macosx-x64-Debug-CLANG-ISPC1_13_0-SSE2-TBB2021_1_1-NAMESPACE:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/macos.yml@main
     with:
       runs-on: '[ "macOS", "build", "x86_64" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG ispc:ispc1.12.0 isa:SSE2 tasking:TBB2021.1.1 intensity:4 api_namespace:myembree maxinstancelevelcount:4
+        scripts/test.py configure platform:x64 build:Debug compiler:CLANG ispc:ispc1.13.0 isa:SSE2 tasking:TBB2021.1.1 intensity:4 api_namespace:myembree maxinstancelevelcount:4
         scripts/test.py build
         scripts/test.py test
 
@@ -700,7 +728,7 @@ jobs:
 
   linux-ubuntu22_04-arm64:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/arm64v8-ubuntu:22.04
       runs-on: '[ "Linux", "docker-arm", "ARM64" ]'

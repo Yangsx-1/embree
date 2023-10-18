@@ -95,6 +95,7 @@ namespace embree
   inline void verifyGeometryDesc(const ze_rtas_builder_procedural_geometry_info_exp_t* geom)
   {
     if (geom->primCount   && geom->pfnGetBoundsCb == nullptr) throw std::runtime_error("no bounds function specified");
+    if (geom->reserved != 0) throw std::runtime_error("reserved value must be zero");
   }
 
   inline void verifyGeometryDesc(const ze_rtas_builder_instance_geometry_info_exp_t* geom)
@@ -341,6 +342,9 @@ namespace embree
 
   ze_result_t validate(ze_rtas_format_exp_t rtasFormat)
   {
+    if (rtasFormat == ZE_RTAS_FORMAT_EXP_INVALID)
+      return ZE_RESULT_ERROR_INVALID_ENUMERATION;
+      
     if (uint32_t(rtasFormat) > uint32_t(ZE_RTAS_DEVICE_FORMAT_EXP_VERSION_MAX))
       return ZE_RESULT_ERROR_INVALID_ENUMERATION;
 
@@ -652,7 +656,7 @@ namespace embree
     return ZE_RESULT_SUCCESS;
   }
   catch (std::exception& e) {
-    std::cerr << "caught exception during BVH build: " << e.what() << std::endl;
+    //std::cerr << "caught exception during BVH build: " << e.what() << std::endl;
     return ZE_RESULT_ERROR_UNKNOWN;
   }
   

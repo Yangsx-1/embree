@@ -10,6 +10,23 @@
 #include <CL/sycl.hpp>
 #include "tbb/tbb.h"
 
+#if defined(ZE_RAYTRACING)
+#include "../rtbuild/sys/sysinfo.h"
+#include "../rtbuild/sys/vector.h"
+#include "../rtbuild/math/vec2.h"
+#include "../rtbuild/math/vec3.h"
+#include "../rtbuild/math/bbox.h"
+#include "../rtbuild/math/affinespace.h"
+#else
+#include "../../../common/sys/sysinfo.h"
+#include "../../../common/sys/vector.h"
+#include "../../../common/math/vec2.h"
+#include "../../../common/math/vec3.h"
+#include "../../../common/math/bbox.h"
+#include "../../../common/math/lbbox.h"
+#include "../../../common/math/affinespace.h"
+#endif
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -20,57 +37,15 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <fstream>
 
 namespace embree {
   double getSeconds();
 }
 
-#define PRINT(x) std::cout << #x << " = " << x << std::endl;
-
 sycl::device device;
 sycl::context context;
 void* dispatchGlobalsPtr = nullptr;
-
-#if defined(EMBREE_SYCL_SUPPORT) && defined(__SYCL_DEVICE_ONLY__)
-#define CONSTANT __attribute__((opencl_constant))
-#else
-#define CONSTANT
-#endif
-
-#define sycl_printf0(format, ...) {               \
-    static const CONSTANT char fmt[] = format;               \
-    sycl::ext::oneapi::experimental::printf(fmt, __VA_ARGS__ );   \
-  }
-
-#define sycl_print_str(format) {               \
-    static const CONSTANT char fmt[] = format;               \
-    sycl::ext::oneapi::experimental::printf(fmt);   \
-  }
-
-void sycl_print_float(float x)
-{
-  int i = (int)sycl::trunc(x);
-  int f = (int)sycl::trunc(1000.0f*(x-i));
-  sycl_printf0("%i.%i",i,f);
-}
-
-#define sycl_printf_float(str, x) \
-  {                               \
-    sycl_print_str(str);          \
-    sycl_print_float(x);          \
-    sycl_print_str("\n");         \
-  }
-
-#define sycl_printf_float3(str, v)                              \
-{                                                               \
-  sycl_print_str(str);                                          \
-  sycl_print_float(v.x());                                      \
-  sycl_print_str(" ");                                          \
-  sycl_print_float(v.y());                                      \
-  sycl_print_str(" ");                                          \
-  sycl_print_float(v.z());                                      \
-  sycl_print_str("\n");                                         \
-}
 
 struct RandomSampler {
   unsigned int s;
@@ -229,10 +204,6 @@ std::ostream& operator<<(std::ostream& out, const intel_float3& v) {
   return out << "(" << v.x << "," << v.y << "," << v.z  << ")";
 }
 
-std::ostream& operator<<(std::ostream& out, const sycl::float3& v) {
-  return out << "(" << v.x() << "," << v.y() << "," << v.z()  << ")";
-}
-
 void compareTestOutput(uint32_t tid, uint32_t& errors, const TestOutput& test, const TestOutput& expected)
 {
 #define COMPARE(member)                 \
@@ -258,9 +229,9 @@ void compareTestOutput(uint32_t tid, uint32_t& errors, const TestOutput& test, c
     }                                                                   \
   }
 #define COMPARE3I(member,eps) {                                          \
-    const bool x = fabs(test.member.x-expected.member.x) > eps;     \
-    const bool y = fabs(test.member.y-expected.member.y) > eps;     \
-    const bool z = fabs(test.member.z-expected.member.z) > eps;     \
+    const bool x = test.member.x != expected.member.x;     \
+    const bool y = test.member.y != expected.member.y;     \
+    const bool z = test.member.z != expected.member.z;     \
     if (x || y || z) {                                                  \
       if (errors < 16)                                                  \
         std::cout << "test" << tid << " " #member " mismatch: output " << test.member << " != expected " << expected.member << std::endl; \
@@ -347,7 +318,7 @@ public:
 };
 
 sycl::float3 xfmPoint (const LinearSpace3f& m, const sycl::float3& p) {
-  return p.x()*m.vx + p.y()*m.vy + p.z()*m.vz;
+  return p.x()*m.vx + (p.y()*m.vy + p.z()*m.vz);
 }
 
 struct Transform
@@ -373,11 +344,11 @@ std::ostream& operator<<(std::ostream& out, const Transform& t) {
 }
 
 sycl::float3 xfmPoint (const Transform& m, const sycl::float3& p) {
-  return p.x()*m.vx + p.y()*m.vy + p.z()*m.vz + m.p;
+  return p.x()*m.vx + (p.y()*m.vy + (p.z()*m.vz + m.p));
 }
 
 sycl::float3 xfmVector (const Transform& m, const sycl::float3& v) {
-  return v.x()*m.vx + v.y()*m.vy + v.z()*m.vz;
+  return v.x()*m.vx + (v.y()*m.vy + v.z()*m.vz);
 }
 
 Transform operator* (const Transform& a, const Transform& b) {
@@ -386,9 +357,23 @@ Transform operator* (const Transform& a, const Transform& b) {
 
 Transform rcp( const Transform& a )
 {
+#if 1 // match builder math for rcp to have bit accurate data to compare against
+  embree::Vec3f vx(a.vx.x(), a.vx.y(), a.vx.z());
+  embree::Vec3f vy(a.vy.x(), a.vy.y(), a.vy.z());
+  embree::Vec3f vz(a.vz.x(), a.vz.y(), a.vz.z());
+  embree::Vec3f  p(a. p.x(), a. p.y(), a. p.z());
+  embree::AffineSpace3f l(embree::LinearSpace3f(vx,vy,vz),p);
+  embree::AffineSpace3f il = rcp(l);
+  sycl::float3 ivx(il.l.vx.x, il.l.vx.y, il.l.vx.z);
+  sycl::float3 ivy(il.l.vy.x, il.l.vy.y, il.l.vy.z);
+  sycl::float3 ivz(il.l.vz.x, il.l.vz.y, il.l.vz.z);
+  sycl::float3  ip(il.p.x, il.p.y, il.p.z);
+  return Transform(ivx,ivy,ivz,ip);
+#else
   const LinearSpace3f l = { a.vx, a.vy, a.vz };
   const LinearSpace3f il = l.inverse();
   return Transform(il.vx, il.vy, il.vz, -xfmPoint(il,a.p));
+#endif
 }
 
 Transform RandomSampler_getTransform(RandomSampler& self)
@@ -2067,19 +2052,15 @@ void* allocDispatchGlobals(sycl::device device, sycl::context context)
 
 int main(int argc, char* argv[])
 {
-  if (ZeWrapper::init() != ZE_RESULT_SUCCESS) {
-    std::cerr << "ZeWrapper not successfully initialized" << std::endl;
-    return 1;
-  }
-
-#if defined(ZE_RAYTRACING_RT_SIMULATION)
-  RTCore::Init();
-  RTCore::SetXeVersion((RTCore::XeVersion)ZE_RAYTRACING_DEVICE);
-#endif
-
   TestType test = TestType::TRIANGLES_COMMITTED_HIT;
   InstancingType inst = InstancingType::NONE;
   BuildMode buildMode = BuildMode::BUILD_EXPECTED_SIZE;
+
+#if defined(EMBREE_SYCL_L0_RTAS_BUILDER)
+  ZeWrapper::RTAS_BUILD_MODE rtas_build_mode = ZeWrapper::RTAS_BUILD_MODE::AUTO;
+#else
+  ZeWrapper::RTAS_BUILD_MODE rtas_build_mode = ZeWrapper::RTAS_BUILD_MODE::INTERNAL;
+#endif
   
   bool jit_cache = false;
   uint32_t numThreads = tbb::this_task_arena::max_concurrency();
@@ -2093,8 +2074,17 @@ int main(int argc, char* argv[])
   /* parse all command line options */
   for (size_t i=1; i<argc; i++)
   {
-    if (strcmp(argv[i], "--triangles-committed-hit") == 0) {
-    test = TestType::TRIANGLES_COMMITTED_HIT;
+    if (strcmp(argv[i], "--internal-rtas-builder") == 0) {
+      rtas_build_mode = ZeWrapper::RTAS_BUILD_MODE::INTERNAL;
+    }
+    else if (strcmp(argv[i], "--level-zero-rtas-builder") == 0) {
+      rtas_build_mode = ZeWrapper::RTAS_BUILD_MODE::LEVEL_ZERO;
+    }
+    else if (strcmp(argv[i], "--default-rtas-builder") == 0) {
+      rtas_build_mode = ZeWrapper::RTAS_BUILD_MODE::AUTO;
+    }
+    else if (strcmp(argv[i], "--triangles-committed-hit") == 0) {
+      test = TestType::TRIANGLES_COMMITTED_HIT;
     }
     else if (strcmp(argv[i], "--triangles-potential-hit") == 0) {
       test = TestType::TRIANGLES_POTENTIAL_HIT;
@@ -2158,6 +2148,16 @@ int main(int argc, char* argv[])
   if (jit_cache)
     std::cout << "WARNING: JIT caching is not supported!" << std::endl;
 
+  if (ZeWrapper::init() != ZE_RESULT_SUCCESS) {
+    std::cerr << "ZeWrapper not successfully initialized" << std::endl;
+    return 1;
+  }
+
+#if defined(ZE_RAYTRACING_RT_SIMULATION)
+  RTCore::Init();
+  RTCore::SetXeVersion((RTCore::XeVersion)ZE_RAYTRACING_DEVICE);
+#endif
+
   tbb::global_control tbb_threads(tbb::global_control::max_allowed_parallelism,numThreads);
     
   /* initialize SYCL device */
@@ -2174,6 +2174,41 @@ int main(int argc, char* argv[])
 
   sycl::platform platform = device.get_platform();
   ze_driver_handle_t hDriver = sycl::get_native<sycl::backend::ext_oneapi_level_zero>(platform);
+
+  /* enable RTAS extension only when enabled */
+  if (rtas_build_mode == ZeWrapper::RTAS_BUILD_MODE::AUTO)
+  {
+    uint32_t count = 0;
+    std::vector<ze_driver_extension_properties_t> extensions;
+    ze_result_t result = ZeWrapper::zeDriverGetExtensionProperties(hDriver,&count,extensions.data());
+    if (result != ZE_RESULT_SUCCESS)
+      throw std::runtime_error("zeDriverGetExtensionProperties failed");
+    
+    extensions.resize(count);
+    result = ZeWrapper::zeDriverGetExtensionProperties(hDriver,&count,extensions.data());
+    if (result != ZE_RESULT_SUCCESS)
+      throw std::runtime_error("zeDriverGetExtensionProperties failed");
+    
+    bool ze_rtas_builder = false;
+    for (uint32_t i=0; i<extensions.size(); i++)
+    {
+      if (strncmp("ZE_experimental_rtas_builder",extensions[i].name,sizeof(extensions[i].name)) == 0)
+        ze_rtas_builder = true;
+    }
+
+    if (ze_rtas_builder)
+      ZeWrapper::initRTASBuilder(hDriver,ZeWrapper::RTAS_BUILD_MODE::AUTO);
+    else
+      ZeWrapper::initRTASBuilder(hDriver,ZeWrapper::RTAS_BUILD_MODE::INTERNAL);
+  }
+  else
+    ZeWrapper::initRTASBuilder(hDriver,rtas_build_mode);
+
+  if (ZeWrapper::rtas_builder == ZeWrapper::INTERNAL)
+    std::cout << "using internal RTAS builder" << std::endl;
+  else
+    std::cout << "using Level Zero RTAS builder" << std::endl;
+
     
   /* create L0 builder object */
   ze_rtas_builder_exp_desc_t builderDesc = { ZE_STRUCTURE_TYPE_RTAS_BUILDER_EXP_DESC };
